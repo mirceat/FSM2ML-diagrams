@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+state "AutoML Frameworks" as AutoMLFrameworks {
+  GoogleCloudAutoML : [[https://cloud.google.com/automl]]
+  H2O.ai : [[https://www.h2o.ai/]]
+  DataRobot : [[https://www.datarobot.com/]]
+  TPOT : [[https://github.com/EpistasisLab/tpot]]
+  AutoKeras : [[https://autokeras.com/]]
+  Ludwig : [[https://ludwig.ai/]]
+  AutoGluon : [[https://autogluon.mxnet.io/]]
+  MLJAR : [[https://mljar.com/]]
+  IBMAutoAI : [[https://www.ibm.com/cloud/watson-studio/autoai]]
+  AzureAutomatedMachineLearning : [[https://azure.microsoft.com/en-us/services/machine-learning/automatedml/]]
+  Pycaret : [[https://pycaret.org/]]
+  ScikitLearn : [[https://scikit-learn.org/stable/auto_examples/index.html#automated-machine-learning]]
+
+  [*] --> FrameworkSelection
+  GoogleCloudAutoML <- FrameworkSelection
+  H2O.ai <- FrameworkSelection
+  DataRobot <- FrameworkSelection
+  FrameworkSelection --> TPOT
+  FrameworkSelection --> AutoKeras
+  FrameworkSelection --> Ludwig
+  FrameworkSelection --> AutoGluon
+  FrameworkSelection --> MLJAR
+  FrameworkSelection --> IBMAutoAI
+  FrameworkSelection -> AzureAutomatedMachineLearning
+  FrameworkSelection -> Pycaret
+  FrameworkSelection -> ScikitLearn
+}
+
+@enduml

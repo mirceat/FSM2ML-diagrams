@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+
+card autogluon [
+  Autogluon
+  AutoML for Text, Image,
+  and Tabular Data
+  ====
+  [[https://auto.gluon.ai/0.6.0/index.html]]
+]
+
+database M4 #lightblue [
+  M4 Forecasting Competition
+  [[https://www.wikidata.org/wiki/Q1172284 data set]]
+  ====
+  The M4 Competition:
+  100,000 time series and
+  61 forecasting methods
+  [[https://www.sciencedirect.com/science/article/pii/S0169207019301128 Elsevier]]
+  [[https://www.kaggle.com/datasets/yogesh94/m4-forecasting-competition-dataset Kaggle]]
+]
+
+database M5 #lightblue [
+  M5 Forecasting Competition
+  Estimate the unit sales of
+  Walmart retail goods
+  [[https://www.wikidata.org/wiki/Q1172284 data set]]
+  ==
+  $50,000 Prize Money
+  [[https://www.kaggle.com/c/m5-forecasting-accuracy Kaggle]]
+]
+
+database M6 #lightblue [
+  M6 Forecasting Competition
+  [[https://www.wikidata.org/wiki/Q1172284 data set]]
+  ====
+  [[https://www.kaggle.com/general/269770 Kaggle]]
+  [[https://www.dropbox.com/s/2zroh4mllxni5f2/M6-Description-PUBLIC.pdf?dl=0 Dropbox]]
+  [[https://mofc.unic.ac.cy/ MOFC]]
+]
+
+autogluon --> M4 : uses
+M4 <- M5
+M5 <- M6
+
+@enduml

@@ -1,0 +1,102 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+'scale 350 width
+
+'skinparam state {
+'  FontSize 12
+'  FontColor blue
+'}
+
+[*] --> AutoGluon
+
+state AutoGluon {
+
+}
+
+state "Forecasting Models" as ForecastingModels
+
+state "Simple Forecasting Models" as SimpleForecastingModels {
+  state ARIMA {
+
+  }
+
+  state ETS {
+
+  }
+
+  state Theta {
+
+  }
+
+  state SeasonalNaive {
+
+  }
+}
+
+state "Powerfull Deep Learning Models" as PowerfullDeepLearningModels {
+  state DeepAR {
+
+  }
+
+  state SimpleFeedForward {
+
+  }
+
+  state "Temporal Fusion Transformer" as TemporalFusionTransformer {
+
+  }
+}
+
+state "Tree-Based Models" as TreeBasedModels {
+  state XGBoost {
+
+  }
+
+  state CatBoost {
+
+  }
+
+  state LightGBM {
+
+  }
+}
+
+state Ensemble {
+
+}
+
+state "Time Series" as TimeSeries {
+
+  [*] --> LoadingTimeSeries
+  LoadingTimeSeries --> TrainingTimeSeries
+  TrainingTimeSeries --> GeneratingForecasts
+  GeneratingForecasts --> EvaluatingPerformance
+  EvaluatingPerformance --> [*]
+}
+
+state "Tabular Data" as TabularData {
+
+}
+
+state Multimodal {
+
+}
+
+state Applications {
+
+}
+
+AutoGluon --> ForecastingModels
+SimpleForecastingModels <- ForecastingModels
+'ForecastingModels --> SimpleForecastingModels
+ForecastingModels --> PowerfullDeepLearningModels
+ForecastingModels --> TreeBasedModels
+ForecastingModels -> Ensemble
+
+AutoGluon -> Applications
+Applications -> TabularData
+Applications --> Multimodal
+Applications --> TimeSeries
+
+@enduml

@@ -1,0 +1,55 @@
+@startuml
+
+actor actor
+actor actor1 [
+  actor
+]
+
+database PlantUMLRepo #lightblue [
+  PlantUML
+  Repository
+  ====
+  files.puml
+  files.svg
+  files.png
+  files.json
+  files.py
+  files.ipynb
+]
+
+component plantuml.jar
+
+component pyParsing
+
+component FSM2ML #lightgreen
+component puml2miros #lightgreen
+component puml2json #lightgreen
+
+
+component "AutoML Frameworks" as AutoMLFrameworks #lightgreen
+
+component Miros
+
+component WebServer
+
+component GraphQL
+
+actor --> PlantUMLRepo
+PlantUMLRepo -> plantuml.jar : files.puml
+PlantUMLRepo <- plantuml.jar : files.svg\nfiles.png
+FSM2ML <-> PlantUMLRepo
+AutoMLFrameworks <- FSM2ML
+puml2miros --* FSM2ML
+puml2miros --> PlantUMLRepo : files.py\nfiles.ipynb
+puml2miros <-- PlantUMLRepo : files.puml
+puml2json --* FSM2ML
+puml2json --> PlantUMLRepo : files.json
+puml2json <-- PlantUMLRepo : files.puml
+pyParsing <-- puml2json
+Miros <-- puml2miros
+pyParsing <-- puml2miros
+FSM2ML --> WebServer
+PlantUMLRepo --> GraphQL : files.json
+GraphQL --> WebServer
+actor1 -> WebServer
+@enduml

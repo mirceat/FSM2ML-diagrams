@@ -1,0 +1,114 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+'scale 350 width
+
+'skinparam state {
+'  FontSize 12
+'  FontColor blue
+'}
+
+state "Time Series" as TimeSeries {
+  state "Loading Time Series\ndata as a TimeSeriesDateFrame" as LoadingTimeSeries {
+
+  }
+
+  LoadingTimeSeries : entry / "https://autogluon.s3.amazonaws.com/datasets/timeseries/m4_hourly_subset/train.csv"\n\
+exit / train_data\n\
+====\n\
+[[https://colab.research.google.com/github/autogluon/autogluon/blob/master/docs/tutorials/timeseries/forecasting-quick-start.ipynb#scrollTo=aa00faab-252f-44c9-b8f7-57131aa8251c&line=1&uniqifier=1 Colab]]\n\
+====\n\
+!pip install autogluon.timeseries\n\
+----\n\
+import pandas as pd\n\
+from autogluon.timeseries import TimeSeriesDataFrame, TimeSeriesPredictor\n\
+----\n\
+df = pd.read_csv("https://autogluon.s3.amazonaws.com/datasets/timeseries/m4_hourly_subset/train.csv")\n\
+df.head()\n\
+----\n\
+train_data = TimeSeriesDataFrame.from_data_frame(\n\
+    df,\n\
+    id_column="item_id",\n\
+    timestamp_column="timestamp"\n\
+)\n\
+train_data.head()
+
+  state "Training time series models\nwith TimeSeriesPredictor.fit" as TrainingTimeSeries {
+
+  }
+
+  TrainingTimeSeries : entry / train_data\n\
+exit / predictor\n\
+====\n\
+[[https://colab.research.google.com/github/autogluon/autogluon/blob/master/docs/tutorials/timeseries/forecasting-quick-start.ipynb#scrollTo=f7ef668c&line=1&uniqifier=1 Colab]]\n\
+====\n\
+predictor = TimeSeriesPredictor(\n\
+  prediction_length=48,\n\
+  path="autogluon-m4-hourly",\n\
+  target="target",\n\
+  eval_metric="sMAPE",\n\
+)\n\
+\n\
+predictor.fit(\n\
+  train_data,\n\
+  presets="medium_quality",\n\
+  time_limit=600,\n\
+)\n
+
+  state "Generating forecasts with\nTimeSeriesPredictor.predict" as GeneratingForecasts {
+
+  }
+
+  GeneratingForecasts : entry / predictor\n\
+entry / "https://autogluon.s3.amazonaws.com/datasets/timeseries/m4_hourly_subset/test.csv"\n\
+exit / predictor\n\
+exit / test_data\n\
+====\n\
+[[https://colab.research.google.com/github/autogluon/autogluon/blob/master/docs/tutorials/timeseries/forecasting-quick-start.ipynb#scrollTo=4a238183&line=1&uniqifier=1 Colab]]\n\
+====\n\
+predictions = predictor.predict(train_data)\n\
+predictions.head()\n\
+----\n\
+import matplotlib.pyplot as plt\n\
+\n\
+~# TimeSeriesDataFrame can also be loaded directly from a file\n\
+test_data = TimeSeriesDataFrame.from_path("https://autogluon.s3.amazonaws.com/datasets/timeseries/m4_hourly_subset/test.csv")\n\
+\n\
+plt.figure(figsize=(20, 3))\n\
+\n\
+item_id = "H1"\n\
+y_past = train_data.loc[item_id]["target"]\n\
+y_pred = predictions.loc[item_id]\n\
+y_test = test_data.loc[item_id]["target"][-48:]\n\
+\n\
+plt.plot(y_past[-200:], label="Past time series values")\n\
+plt.plot(y_pred["mean"], label="Mean forecast")\n\
+plt.plot(y_test, label="Future time series values")\n\
+\n\
+plt.fill_between(\n\
+    y_pred.index, y_pred["0.1"], y_pred["0.9"], color="red", alpha=0.1, label=f"10%-90% confidence interval"\n\
+)\n\
+plt.legend();
+
+  state "Evaluating the performance\nof different models" as EvaluatingPerformance {
+
+  }
+
+  EvaluatingPerformance : entry / predictor\n\
+entry / test_data\n\
+exit / predictor.leaderboard\n\
+====\n\
+[[https://colab.research.google.com/github/autogluon/autogluon/blob/master/docs/tutorials/timeseries/forecasting-quick-start.ipynb#scrollTo=2f4f8e9c&line=3&uniqifier=1 Colab]]\n\
+====\n\
+~# The test score is computed using the last\n\
+~# prediction_length=48 timesteps of each time series in test_data\n\
+predictor.leaderboard(test_data, silent=True)
+
+  [*] --> LoadingTimeSeries
+  LoadingTimeSeries --> TrainingTimeSeries
+  TrainingTimeSeries --> GeneratingForecasts
+  GeneratingForecasts --> EvaluatingPerformance
+  EvaluatingPerformance --> [*]
+}
+
+@enduml

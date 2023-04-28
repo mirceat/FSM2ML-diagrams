@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+state "AI Frameworks" as AIFrameworks {
+  MXNet : [[https://mxnet.apache.org/]]
+  Caffe : [[http://caffe.berkeleyvision.org/]]
+  Keras : [[https://keras.io/]]
+  Torch : [[http://torch.ch/]]
+  Chainer : [[https://chainer.org/]]
+  Theano : [[https://github.com/Theano/Theano]]
+  CNTK : [[https://docs.microsoft.com/en-us/cognitive-toolkit/]]
+  TensorFlow : [[https://www.tensorflow.org]]
+  PyTorch : [[https://pytorch.org/]]
+  PyTorchLightning : [[https://www.pytorchlightning.ai/]]
+  DeepLearning4J : [[https://deeplearning4j.konduit.ai/]]
+
+  [*] --> FrameworkSelection
+  FrameworkSelection -> MXNet
+  FrameworkSelection -> Caffe
+  FrameworkSelection -> Keras
+  FrameworkSelection --> Torch
+  FrameworkSelection --> Chainer
+  FrameworkSelection --> Theano
+  FrameworkSelection --> CNTK
+  FrameworkSelection --> TensorFlow
+  PyTorch <- FrameworkSelection
+  PyTorchLightning <- FrameworkSelection
+  DeepLearning4J <- FrameworkSelection
+
+}
+
+@enduml

@@ -1,0 +1,68 @@
+@startuml
+
+state "PlantUML DSL for nested TimeSeries" as PlantUML {
+
+}
+
+PlantUML : state "Time Series" as TimeSeries {\n\
+  state LoadingTimeSeries\n\
+  state TrainingTimeSeries\n\
+  state GeneratingForecasts\n\
+  state EvaluatingPerformance\n\
+\n\
+  [*] --> LoadingTimeSeries\n\
+  LoadingTimeSeries --> TrainingTimeSeries\n\
+  TrainingTimeSeries --> GeneratingForecasts\n\
+  GeneratingForecasts --> EvaluatingPerformance\n\
+  EvaluatingPerformance --> [*]\n\
+}
+
+state "Time Series" as TimeSeries {
+  state LoadingTimeSeries
+  state TrainingTimeSeries
+  state GeneratingForecasts
+  state EvaluatingPerformance
+
+  [*] --> LoadingTimeSeries
+  LoadingTimeSeries --> TrainingTimeSeries
+  TrainingTimeSeries --> GeneratingForecasts
+  GeneratingForecasts --> EvaluatingPerformance
+  EvaluatingPerformance --> [*]
+}
+
+
+
+state "PyParsing Nested States" as PyParsing {
+
+}
+
+PyParsing : entry / puml_code \n\
+====\n\
+[[https://colab.research.google.com/drive/1ChWktWvzvhjI5atpfXidiUYdCoy_-ygF#scrollTo=G3wa3H0Pc38x&line=5&uniqifier=1 Colab]]\n\
+== imports ==\n\
+from pyparsing import Word, alphas, nums, alphanums, Suppress, Forward, \n\
+    Group, Optional, ZeroOrMore, QuotedString, Regex, SkipTo, LineEnd\n\
+import pprint\n\
+== code ==\n\
+~# Define a grammar for matching quoted strings with escaped newlines\n\
+quoted_string = QuotedString('"', escChar='\\', multiline=True)\n\
+identifier = Word(alphas, alphanums+'_')\n\
+LCURLY, RCURLY = map( Suppress, "{}")\n\
+state = Forward()\n\
+statePrefixCurly = Word( "state" ) + quoted_string + Suppress( "as" ) + identifier\n\
+list_ = statePrefixCurly + Optional( LCURLY + Group( ZeroOrMore( state ) ) + RCURLY )\n\
+state << ( statePrefixCurly + LCURLY + RCURLY | list_ )\n\
+prompt = state\n\
+pprint.pprint( prompt.parseString( puml_code ).asList() )\n\
+== results ==\n\
+["state",\n\
+ "Time Series",\n\
+ "TimeSeries",\n\
+ ~["state", ...\n\
+  "LoadingTimeSeries",\n\
+  "state", ...\n\
+  "TrainingTimeSeries"...]]
+
+TimeSeries <- PlantUML : generates
+PlantUML -> PyParsing : puml_code
+@enduml
