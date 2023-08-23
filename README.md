@@ -10,3 +10,5 @@ PlantUML diagrams for article: ["A Combined Finite State Machine and PlantUML Ap
   year={2023},
   organization={IEEE}
 }
+
+Presentation slides available ["here"](https://github.com/mirceat/FSM2ML-diagrams/blob/main/A%20Combined%20Finite%20State%20Machine%20%20and%20PlantUML%20Approach%20to%20Machine%20Learning%20Applications%20Presentation%20FINAL.pdf).
